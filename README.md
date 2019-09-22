@@ -1,17 +1,27 @@
-# Nightcore: Python CLI for creating chipmunk audio 🐿
+# Nightcore - Easily modify speed/pitch
 
 A small and focused CLI for changing the pitch and speed of audio files.
-
-FFmpeg is required for audio operations. See [here](https://github.com/jiaaro/pydub#getting-ffmpeg-set-up) for instructions on how to set it up!
 
 > I had the idea for this a long time ago, and wanted to make it to prove a point. This program is not intended for, nor should it be used for, copyright infringement and piracy. [**Nightcore is not, and has never been, fair use**](https://www.avvo.com/legal-answers/does-making-a--nightcore--version-of-a-song--speed-2438914.html).
 
 ## Installation
 
-Nightcore is on PyPI, so you can use `pip` to install it (although [pipx](https://pipxproject.github.io/pipx/) is recommended)
+**FFmpeg is a required dependency** - [see here](https://github.com/jiaaro/pydub#getting-ffmpeg-set-up) for instructions on how to set it up!
+
+With FFmpeg installed, you can use `pip` to install `nightcore` (although [pipx](https://pipxproject.github.io/pipx/) is recommended)
 
 ```sh
 pip install nightcore
+```
+
+### Building from source
+
+`nightcore` is built using [Poetry](https://poetry.eustace.io).
+
+```sh
+$ git clone https://github.com/SeparateRecords/nightcore
+$ poetry install
+$ poetry build
 ```
 
 ## Usage
@@ -19,6 +29,9 @@ pip install nightcore
 The CLI is easy to use, and behaves as you would expect.
 
 ```sh
+# Show the help menu
+$ nightcore --help
+
 # By default it will increase the pitch by 2 semitones.
 $ nightcore music.mp3 > out.mp3
 
