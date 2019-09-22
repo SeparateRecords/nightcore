@@ -41,7 +41,7 @@ class Interval(RelativeChange):
     the number of each interval per octave.
     """
 
-    n_per_octave: int = None
+    n_per_octave: int
 
     def as_percent(self) -> float:
         return 2 ** (self.amount / self.n_per_octave)
