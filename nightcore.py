@@ -6,12 +6,12 @@ from abc import ABC, abstractmethod
 import click
 from pydub import AudioSegment
 
-__version__ = "0.5.4"
+__version__ = "0.5.5"
 
 
 class StepTypes(dict):
     def add(self, obj: type):
-        """Add a mapping of obj's name and type, normalized to lower case"""
+        """Add a mapping of `obj`s name (in lower case) to itself"""
         self.update(**{obj.__name__.lower(): obj})
         return obj
 
@@ -22,6 +22,7 @@ step_types = StepTypes()
 @dataclass
 class RelativeChange(ABC):
     """Convert numerical values to an amount of change"""
+
     amount: float
 
     @abstractmethod
@@ -35,29 +36,42 @@ class RelativeChange(ABC):
 
 
 class Interval(RelativeChange):
+    """Base class for implementing types of intervals (semitones, etc...)
+    To subclass `Interval`, override the class property `n_per_octave` with
+    the number of each interval per octave.
+    """
+
     n_per_octave: int = None
 
     def as_percent(self) -> float:
-        return 2 ** (int(self.amount) / self.n_per_octave)
+        return 2 ** (self.amount / self.n_per_octave)
 
 
 @step_types.add
 class Semitones(Interval):
+    """Increase or decrease the speed by an amount in semitones"""
+
     n_per_octave = 12
 
 
 @step_types.add
 class Tones(Interval):
+    """Increase or decrease the speed by an amount in tones"""
+
     n_per_octave = 6
 
 
 @step_types.add
 class Octaves(Interval):
+    """Increase or decrease the speed by an amount in octaves"""
+
     n_per_octave = 1
 
 
 @step_types.add
 class Percent(RelativeChange):
+    """Increase or decrease the speed by a percentage (100 == no change)"""
+
     def as_percent(self) -> float:
         return self.amount / 100
 
@@ -82,7 +96,8 @@ def cli(file, steps, step_type, output_file, file_format, no_eq):
     if stdout.isatty() and output_file is stdout.buffer:
         fail("no output file (redirect or use `--output <file>`)")
 
-    pct_change = float(step_types.get(step_type)(steps))
+    change_cls = step_types.get(step_type, lambda x: x)
+    pct_change = float(change_cls(steps))
 
     audio = AudioSegment.from_file(file, format=file_format)
 
