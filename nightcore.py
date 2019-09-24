@@ -79,16 +79,15 @@ class Percent(RelativeChange):
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("FILE", type=click.Path(exists=True), required=True)
 @click.argument("STEPS", type=float, default=2)
-@click.argument("STEP_TYPE",
-                type=click.Choice(step_types.keys(), case_sensitive=False),
-                default="semitones")
-@click.option("--output", "-o", "output_file", required=False,
-              default=stdout.buffer, type=click.File(mode="wb"),
-              help="Set the output file")
+@click.argument("STEP_TYPE", default="semitones",
+                type=click.Choice(step_types.keys(), case_sensitive=False))
+@click.option("--output", "-o", required=False, default=stdout.buffer,
+              type=click.File(mode="wb"),
+              help="Output to file instead of stdout")
 @click.option("--format", "-f", "file_format", required=False,
               help="Override the inferred file format")
 @click.option("--no-eq", is_flag=True,
-              help="Toggle the default bass boost and treble reduction")
+              help="Disable the default bass boost and treble reduction")
 @click.version_option(__version__)
 def cli(file, steps, step_type, output_file, file_format, no_eq):
     fail = click.get_current_context().fail
