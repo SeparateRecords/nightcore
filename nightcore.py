@@ -9,14 +9,14 @@ from pydub import AudioSegment
 __version__ = "0.5.5"
 
 
-class StepTypes(dict):
+class NameTypeMap(dict):
     def add(self, obj: type):
         """Add a mapping of `obj`s name (in lower case) to itself"""
         self.update(**{obj.__name__.lower(): obj})
         return obj
 
 
-step_types = StepTypes()
+step_types = NameTypeMap()
 
 
 @dataclass
@@ -37,9 +37,9 @@ class RelativeChange(ABC):
 
 class Interval(RelativeChange):
     """Base class for implementing types of intervals (semitones, etc...)
+
     To subclass `Interval`, override the class property `n_per_octave` with
-    the number of each interval per octave.
-    """
+    each interval's amount per octave."""
 
     n_per_octave: int
 
