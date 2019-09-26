@@ -26,37 +26,56 @@ $ poetry build
 
 ## Usage
 
-The CLI is easy to use, and behaves as you would expect.
+`nightcore` is predictable and ensures there is no unexpected behaviour. As the CLI relies on FFmpeg under the hood, any format supported by FFmpeg is supported by the CLI.
 
-```sh
-# Show the help menu
-$ nightcore --help
+### Speed/pitch
 
-# By default it will increase the pitch by 2 semitones.
+Speeding up a track is super easy. By default, it will increase the pitch by 2 semitones.
+
+```console
 $ nightcore music.mp3 > out.mp3
+```
 
-# Specify pitch increase/decrease
+You can manually set the speed increase by passing a number after the file. Without specifying a type, the increase will be in semitones.
+
+```console
 $ nightcore music.mp3 +3 > out.mp3
+```
 
-# The above command is equivalent to the following:
-$ nightcore music.mp3 +3 semitones > out.mp3
+### Types
 
-# Supports other types of speed-change out of the box
+You can change the type of speed increase by providing it after the number. At the moment, nightcore can take any of `semitones`, `tones`, `octaves` or `percent`.
+
+```console
 $ nightcore music.mp3 +3 tones > out.mp3
+```
 
-# Speed up by a percentage (150 percent => 1.5x speed)
+When using percentages, `100 percent` means no change, `150 percent` is 1.5x speed, `80 percent` is 0.8x speed, etc.
+
+```console
 $ nightcore music.mp3 150 percent > out.mp3
+```
 
-# Slowing down the music works as expected, too
-$ nightcore music.mp3 -3 > out.mp3
+### Output
 
-# The `--output <file>` option can be used instead of redirection
+If the output cannot be redirected, you can specify an output file with `--output` (`-o`)
+
+```console
 $ nightcore music.mp3 --output out.mp3
+```
 
-# Set the extension manually with `--format <fmt>`
+### Format
+
+If the file has no extension to indicate its format, you can specify it manually with `--format` (`-f`)
+
+```console
 $ nightcore badly_named_file --format mp3 > out.mp3
+```
 
-# By default, the output file is equalized to counteract a pitch increase
-# To disable the automatic equalization, pass the `--no-eq` flag
+### EQ
+
+To compensate for a pitch increase, the output track will have a default +2db bass boost and -1db treble reduction applied. **To disable this**, pass in `--no-eq`. Note that if the speed is decreased, there will be no automatic EQ.
+
+```console
 $ nightcore music.mp3 --no-eq > out.mp3
 ```
