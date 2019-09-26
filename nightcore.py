@@ -89,10 +89,10 @@ class Percent(RelativeChange):
 @click.option("--no-eq", is_flag=True,
               help="Disable the default bass boost and treble reduction")
 @click.version_option(__version__)
-def cli(file, steps, step_type, output_file, file_format, no_eq):
+def cli(file, steps, step_type, output, file_format, no_eq):
     fail = click.get_current_context().fail
 
-    if stdout.isatty() and output_file is stdout.buffer:
+    if stdout.isatty() and output is stdout.buffer:
         fail("no output file (redirect or use `--output <file>`)")
 
     change_cls = step_types.get(step_type, lambda x: x)
@@ -113,7 +113,7 @@ def cli(file, steps, step_type, output_file, file_format, no_eq):
         # situation, so it can be disabled with `--no-eq`
         params += ["-af", "bass=g=2, treble=g=-1"]
 
-    new_audio.export(output_file, parameters=params)
+    new_audio.export(output, parameters=params)
 
 
 if __name__ == "__main__":
