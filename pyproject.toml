@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nightcore"
-version = "0.5.5"
+version = "0.5.6"
 description = "Easy CLI for modifying the speed and pitch of audio"
 authors = ["SeparateRecords <me@rob.ac>"]
 readme = "README.md"

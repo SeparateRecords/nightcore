@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 import click
 from pydub import AudioSegment
 
-__version__ = "0.5.5"
+__version__ = "0.5.6"
 
 
 class NameTypeMap(dict):
