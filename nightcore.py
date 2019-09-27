@@ -12,7 +12,7 @@ __version__ = "0.5.6"
 class NameTypeMap(dict):
     def add(self, obj: type):
         """Add a mapping of `obj`s name (in lower case) to itself"""
-        self.update(**{obj.__name__.lower(): obj})
+        self.update({obj.__name__.lower(): obj})
         return obj
 
 
