@@ -33,4 +33,4 @@ requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry.scripts]
-nightcore = "nightcore:cli"
+nightcore = "nightcore.cli:cli"
