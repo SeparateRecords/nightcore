@@ -35,7 +35,7 @@ class RelativeChange(ABC):
         return self.as_percent()
 
 
-class Interval(RelativeChange):
+class BaseInterval(RelativeChange):
     """Base class for implementing types of intervals (semitones, etc...)
 
     To subclass `Interval`, override the class property `n_per_octave` with
@@ -48,21 +48,21 @@ class Interval(RelativeChange):
 
 
 @step_types.add
-class Semitones(Interval):
+class Semitones(BaseInterval):
     """Increase or decrease the speed by an amount in semitones"""
 
     n_per_octave = 12
 
 
 @step_types.add
-class Tones(Interval):
+class Tones(BaseInterval):
     """Increase or decrease the speed by an amount in tones"""
 
     n_per_octave = 6
 
 
 @step_types.add
-class Octaves(Interval):
+class Octaves(BaseInterval):
     """Increase or decrease the speed by an amount in octaves"""
 
     n_per_octave = 1
