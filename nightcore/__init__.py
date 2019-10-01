@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
-from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from functools import wraps
+from os import PathLike
+from typing import Optional
+
+from pydub import AudioSegment
 
 __version__ = "0.5.6"
 
 
-class NameTypeMap(dict):
+# This is basically here to make implementing the CLI easier
+class _NameTypeMap(dict):
     def add(self, obj: type):
         """Add a mapping of `obj`s name (in lower case) to itself"""
         self.update({obj.__name__.lower(): obj})
         return obj
 
 
-step_types = NameTypeMap()
+step_types = _NameTypeMap()
 
 
 @dataclass
@@ -70,3 +76,50 @@ class Percent(RelativeChange):
 
     def as_percent(self) -> float:
         return self.amount / 100
+
+
+class Nightcore:
+    def __init__(self, audio: AudioSegment, change: RelativeChange):
+        self._change = change
+
+        pct_change = change.as_percent()
+        self._audio = audio._spawn(
+            audio.raw_data,
+            overrides={"frame_rate": round(audio.frame_rate * pct_change)},
+        )
+
+        self.export = self._audio.export
+        self.raw_data = self._audio.raw_data
+
+    @property
+    def audio(self):
+        return self._audio
+
+    @property
+    def change(self):
+        return self._change
+
+    @classmethod
+    def from_file(
+        cls,
+        file: PathLike,
+        change: RelativeChange,
+        fmt: Optional[str] = None,
+    ):
+        return cls(AudioSegment.from_file(file, fmt), change)
+
+    @classmethod
+    def using(cls, change: RelativeChange):
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                rv = func()
+                return cls(rv, change)
+
+            return wrapper
+
+        return decorator
+
+
+from_file = Nightcore.from_file
+using = Nightcore.using
