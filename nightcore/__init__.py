@@ -11,13 +11,7 @@ from pydub import AudioSegment
 
 __version__ = "0.5.6"
 
-__all__ = (
-    "Nightcore",
-    "Semitones",
-    "Tones",
-    "Octaves",
-    "Percent"
-)
+__all__ = ("Nightcore", "Semitones", "Tones", "Octaves", "Percent")
 
 
 # This is basically here to make implementing the CLI easier
@@ -203,10 +197,7 @@ class Nightcore:
 
     @classmethod
     def from_file(
-        cls,
-        file: PathLike,
-        change: RelativeChange,
-        fmt: Optional[str] = None,
+        cls, file: PathLike, change: RelativeChange, fmt: Optional[str] = None
     ):
         return cls(AudioSegment.from_file(file, fmt), change)
 
