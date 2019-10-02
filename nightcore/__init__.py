@@ -82,7 +82,7 @@ class BaseInterval(RelativeChange):
     def as_percent(self) -> float:
         return 2 ** (self.amount / self.n_per_octave)
 
-    def _math_operation(self, op, other):
+    def _arithmetic(self, op, other):
         cls = self.__class__
 
         try:
@@ -97,10 +97,22 @@ class BaseInterval(RelativeChange):
             return NotImplemented
 
     def __add__(self, other):
-        return self._math_operation(operator.add, other)
+        return self._arithmetic(operator.add, other)
 
     def __sub__(self, other):
-        return self._math_operation(operator.sub, other)
+        return self._arithmetic(operator.sub, other)
+
+    def __mul__(self, other):
+        return self._arithmetic(operator.mul, other)
+
+    def __truediv__(self, other):
+        return self._arithmetic(operator.truediv, other)
+
+    def __floordiv__(self, other):
+        return self._arithmetic(operator.floordiv, other)
+
+    def __mod__(self, other):
+        return self._arithmetic(operator.mod, other)
 
 
 @step_types.add
