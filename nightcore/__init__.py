@@ -41,7 +41,7 @@ class RelativeChange(ABC):
         return self.__class__(-self.amount) if self.amount > 0 else self
 
     def __pos__(self):
-        return self.__class__(+self.amount) if self.amount < 0 else self
+        return self.__class__(abs(self.amount)) if self.amount < 0 else self
 
     def __eq__(self, other):
         return self.as_percent() == other
