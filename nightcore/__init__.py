@@ -10,6 +10,14 @@ from pydub import AudioSegment
 
 __version__ = "0.5.6"
 
+__all__ = (
+    "Nightcore",
+    "Semitones",
+    "Tones",
+    "Octaves",
+    "Percent"
+)
+
 
 # This is basically here to make implementing the CLI easier
 class _NameTypeMap(dict):
