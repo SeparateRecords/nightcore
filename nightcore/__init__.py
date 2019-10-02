@@ -68,8 +68,8 @@ class RelativeChange(ABC):
 class BaseInterval(RelativeChange):
     """Base class for implementing types of intervals (semitones, etc...)
 
-    To subclass `Interval`, override the class property `n_per_octave` with
-    each interval's amount per octave."""
+    Subclasses must override `n_per_octave`.
+    """
 
     n_per_octave: int
 
@@ -77,6 +77,9 @@ class BaseInterval(RelativeChange):
         return 2 ** (self.amount / self.n_per_octave)
 
     def _arithmetic(self, op, other):
+        """Perform an arithmetic operation (normalize to same interval)
+
+        """
         cls = self.__class__
 
         try:
@@ -189,20 +192,33 @@ class Nightcore:
 
     @property
     def audio(self):
+        """
+
+        """
         return self._audio
 
     @property
     def change(self):
+        """
+
+        """
         return self._change
 
     @classmethod
     def from_file(
         cls, file: PathLike, change: RelativeChange, fmt: Optional[str] = None
     ):
+        """
+
+        """
         return cls(AudioSegment.from_file(file, fmt), change)
 
     @classmethod
     def using(cls, change: RelativeChange):
+        """
+
+        """
+
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):
