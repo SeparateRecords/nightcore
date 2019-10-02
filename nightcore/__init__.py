@@ -147,13 +147,13 @@ class Percent(RelativeChange):
         return self.__class__(self.amount + other)
 
     def __radd__(self, other):
-        return other + self.amount
+        return other + (other * self)
 
     def __sub__(self, other):
         return self.__class__(self.amount - other)
 
     def __rsub__(self, other):
-        return other - self.amount
+        return other - (other * self)
 
     def __mul__(self, other):
         return self.__class__(self.amount * other)
