@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
+import numbers
 import operator
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import wraps
-from numbers import Number
 from os import PathLike
 from typing import Optional
 
@@ -29,7 +29,7 @@ step_types = _NameTypeMap()
 class RelativeChange(ABC):
     """Convert numerical values to an amount of change"""
 
-    amount: Number
+    amount: numbers.Real
 
     @abstractmethod
     def as_percent(self) -> float:
