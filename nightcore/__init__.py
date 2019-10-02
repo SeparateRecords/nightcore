@@ -3,8 +3,9 @@ import operator
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from functools import wraps
+from numbers import Number
 from os import PathLike
-from typing import Optional, Union
+from typing import Optional
 
 from pydub import AudioSegment
 
@@ -34,7 +35,7 @@ step_types = _NameTypeMap()
 class RelativeChange(ABC):
     """Convert numerical values to an amount of change"""
 
-    amount: Union[int, float]
+    amount: Number
 
     @abstractmethod
     def as_percent(self) -> float:
