@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import numbers
 import operator
 from abc import ABC, abstractmethod
