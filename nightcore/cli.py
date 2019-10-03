@@ -12,10 +12,10 @@ from pydub import AudioSegment
 @click.argument("STEP_TYPE", default="semitones",
                 type=click.Choice(step_types.keys(), case_sensitive=False))
 @click.option("--output", "-o", required=False, default=stdout.buffer,
-              type=click.File(mode="wb"),
+              type=click.File(mode="wb"), metavar="<file>",
               help="Output to file instead of stdout")
 @click.option("--format", "-f", "file_format", required=False,
-              help="Override the inferred file format")
+              help="Override the inferred file format", metavar="<format>")
 @click.option("--no-eq", is_flag=True,
               help="Disable the default bass boost and treble reduction")
 @click.version_option(__version__)
