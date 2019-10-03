@@ -22,8 +22,8 @@ from pydub import AudioSegment
 def cli(file, steps, step_type, output, file_format, no_eq):
     fail = click.get_current_context().fail
 
-    if stdout.isatty() and output is stdout.buffer:
-        fail("no output file (redirect or use `--output <file>`)")
+    if output is stdout.buffer and stdout.isatty():
+        fail("output should be redirected if not using `--output <file>`")
 
     change_cls = step_types.get(step_type, lambda x: x)
     pct_change = float(change_cls(steps))
