@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from nightcore import step_types, __version__
 from sys import stdout
 
 import click
-from pydub import AudioSegment
+
+from nightcore import Nightcore, __version__, step_types
 
 
 @click.command(context_settings={"ignore_unknown_options": True})
@@ -25,25 +25,19 @@ def cli(file, steps, step_type, output, file_format, no_eq):
     if output is stdout.buffer and stdout.isatty():
         fail("output should be redirected if not using `--output <file>`")
 
-    change_cls = step_types.get(step_type, lambda x: x)
-    pct_change = float(change_cls(steps))
+    change = step_types[step_type](steps)
 
-    audio = AudioSegment.from_file(file, format=file_format)
-
-    new_audio = audio._spawn(
-        audio.raw_data,
-        overrides={"frame_rate": round(audio.frame_rate * pct_change)},
-    )
+    audio = Nightcore.from_file(file, change, fmt=file_format)
 
     params = []
-    if not no_eq and pct_change > 1:
+    if not no_eq and change.as_percent() > 1:
         # Because there will be inherently less bass and more treble in the
         # pitched-up version, this automatic EQ attempts to correct for it.
         # People I've spoken to prefer this, but it may not be ideal for every
         # situation, so it can be disabled with `--no-eq`
         params += ["-af", "bass=g=2, treble=g=-1"]
 
-    new_audio.export(output, parameters=params)
+    audio.export(output, parameters=params)
 
 
 if __name__ == "__main__":
