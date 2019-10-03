@@ -9,7 +9,7 @@ from typing import Optional
 
 from pydub import AudioSegment
 
-__version__ = "1.0.0a1"
+__version__ = "1.0.0b1"
 
 __all__ = ("Nightcore", "Semitones", "Tones", "Octaves", "Percent")
 
