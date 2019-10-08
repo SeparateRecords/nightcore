@@ -3,7 +3,7 @@ from sys import stdout
 
 import click
 
-from nightcore import Nightcore, __version__, step_types
+from nightcore import nightcore, __version__, step_types
 
 
 @click.command(context_settings={"ignore_unknown_options": True})
@@ -27,7 +27,7 @@ def cli(file, steps, step_type, output, file_format, no_eq):
 
     change = step_types[step_type](steps)
 
-    audio = Nightcore.from_file(file, change, fmt=file_format)
+    audio = nightcore(file, change, format=file_format)
 
     params = []
     if not no_eq and change.as_percent() > 1:

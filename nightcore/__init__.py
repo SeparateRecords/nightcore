@@ -1,16 +1,15 @@
-import numbers
 import operator
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from functools import wraps
 from os import PathLike
-from typing import Optional
+from typing import Union
 
 from pydub import AudioSegment
+from pydub.utils import register_pydub_effect
 
-__version__ = "1.0.0b1"
+__version__ = "1.0.0b2"
 
-__all__ = ("Nightcore", "Semitones", "Tones", "Octaves", "Percent")
+__all__ = ("nightcore", "Semitones", "Tones", "Octaves", "Percent")
 
 
 # This is basically here to make implementing the CLI easier
@@ -28,7 +27,7 @@ step_types = _NameTypeMap()
 class RelativeChange(ABC):
     """Convert numerical values to an amount of change"""
 
-    amount: numbers.Real
+    amount: float
 
     @abstractmethod
     def as_percent(self) -> float:
@@ -176,58 +175,47 @@ class Percent(RelativeChange):
         return other % self.as_percent()
 
 
-class Nightcore:
-    def __init__(self, audio: AudioSegment, change: RelativeChange):
-        self._change = change
-
-        pct_change = change.as_percent()
-        self._audio = audio._spawn(
-            audio.raw_data,
-            overrides={"frame_rate": round(audio.frame_rate * pct_change)},
-        )
-
-        self.export = self._audio.export
-        self.raw_data = self._audio.raw_data
-
-    @property
-    def audio(self):
-        """
-
-        """
-        return self._audio
-
-    @property
-    def change(self):
-        """
-
-        """
-        return self._change
-
-    @classmethod
-    def from_file(
-        cls, file: PathLike, change: RelativeChange, fmt: Optional[str] = None
-    ):
-        """
-
-        """
-        return cls(AudioSegment.from_file(file, fmt), change)
-
-    @classmethod
-    def using(cls, change: RelativeChange):
-        """
-
-        """
-
-        def decorator(func):
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                rv = func()
-                return cls(rv, change)
-
-            return wrapper
-
-        return decorator
+ChangeAmount = Union[RelativeChange, float]
+AudioOrPath = Union[AudioSegment, PathLike]
 
 
-from_file = Nightcore.from_file
-using = Nightcore.using
+@register_pydub_effect("nightcore")
+def nightcore(
+    audio: AudioOrPath, amount: ChangeAmount, **kwargs
+) -> AudioSegment:
+    """Modify the speed and pitch of audio or a file by a given amount
+
+    `kwargs` will be passed to `AudioSegment.from_file` if `audio` is not an
+    AudioSegment.
+    """
+
+    # This function is an effect, but it can also be used by itself.
+    # Writing `nightcore.nc("example.mp3", 2)` is fine in many cases.
+    if isinstance(audio, AudioSegment):
+        audio_seg = audio
+    else:
+        audio_seg = AudioSegment.from_file(audio, **kwargs)
+
+    try:
+        new_framerate = round(audio_seg.frame_rate * float(amount))
+    except TypeError:
+        msg = f"Cannot change audio speed by {amount!r}"
+        raise TypeError(msg) from None
+
+    return audio_seg._spawn(
+        audio_seg.raw_data, overrides={"frame_rate": new_framerate}
+    )
+
+
+# Still just as clear to write `nightcore.nc(...)`, easier to read and type
+# than `nightcore.nightcore(...)`.
+nc = nightcore
+
+
+# `AudioSegment.from_file(...) @ Semitones(3)`
+@register_pydub_effect("__matmul__")
+def _nightcore_matmul_op(self, other: ChangeAmount):
+    if hasattr(other, "__float__"):
+        return self.nightcore(other)
+    else:
+        return NotImplemented
