@@ -3,14 +3,17 @@ from sys import stdout
 
 import click
 
-from nightcore import nightcore, __version__, step_types
+import nightcore as nc
+
+change_classes = [nc.Octaves, nc.Tones, nc.Semitones, nc.Percent]
+amount_types = {cls.__name__.lower(): cls for cls in change_classes}
 
 
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("FILE", type=click.Path(exists=True), required=True)
-@click.argument("STEPS", type=float, default=2)
-@click.argument("STEP_TYPE", default="semitones",
-                type=click.Choice(step_types.keys(), case_sensitive=False))
+@click.argument("AMOUNT", type=float, default=2)
+@click.argument("AMOUNT_TYPE", default="semitones",
+                type=click.Choice(amount_types.keys(), case_sensitive=False))
 @click.option("--output", "-o", required=False, default=stdout.buffer,
               type=click.File(mode="wb"), metavar="<file>",
               help="Output to file instead of stdout")
@@ -18,16 +21,16 @@ from nightcore import nightcore, __version__, step_types
               help="Override the inferred file format", metavar="<format>")
 @click.option("--no-eq", is_flag=True,
               help="Disable the default bass boost and treble reduction")
-@click.version_option(__version__)
-def cli(file, steps, step_type, output, file_format, no_eq):
+@click.version_option(nc.__version__)
+def cli(file, amount, amount_type, output, file_format, no_eq):
     fail = click.get_current_context().fail
 
     if output is stdout.buffer and stdout.isatty():
         fail("output should be redirected if not using `--output <file>`")
 
-    change = step_types[step_type](steps)
+    change = amount_types[amount_type](amount)
 
-    audio = nightcore(file, change, format=file_format)
+    audio = nc.nightcore(file, change, format=file_format)
 
     params = []
     if not no_eq and change.as_percent() > 1:
