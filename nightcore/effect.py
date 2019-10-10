@@ -45,7 +45,7 @@ def nightcore(
         new_framerate = round(audio_seg.frame_rate * float(amount))
     except TypeError:
         msg = f"Cannot change audio speed by {amount!r}"
-        raise TypeError(msg) from None
+        raise TypeError(msg)
 
     return audio_seg._spawn(
         audio_seg.raw_data, overrides={"frame_rate": new_framerate}
