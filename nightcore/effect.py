@@ -32,13 +32,16 @@ def nightcore(
     Examples
     --------
     This function can be used as an effect on `AudioSegment` instances.
+        >>> import nightcore as nc
         >>> AudioSegment.from_file("example.mp3").nightcore(nc.Tones(1))
 
     `nightcore` will create an `AudioSegment` if used as a function.
-        >>> nightcore("example.mp3", nc.Semitones(1))
+        >>> import nightcore as nc
+        >>> nc.nightcore("example.mp3", nc.Semitones(1))
 
     Passing the keyword arguments to `AudioSegment.from_file`
-        >>> nightcore("badly_named", nc.Octaves(1), format="ogg")
+        >>> import nightcore as nc
+        >>> nc.nightcore("badly_named", nc.Octaves(1), format="ogg")
 
     Raises
     ------
