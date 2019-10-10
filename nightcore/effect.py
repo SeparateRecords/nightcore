@@ -35,6 +35,10 @@ def nightcore(
     if isinstance(audio, AudioSegment):
         audio_seg = audio
     else:
+        # If the user specified `file=...`, remove it.
+        if "file" in kwargs:
+            del kwargs["file"]
+        # Pass the remaining kwargs to from_file and use the returned audio
         audio_seg = AudioSegment.from_file(audio, **kwargs)
 
     try:
