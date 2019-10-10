@@ -41,15 +41,23 @@ def nightcore(
         # Pass the remaining kwargs to from_file and use the returned audio
         audio_seg = AudioSegment.from_file(audio, **kwargs)
 
+    # Multiply the old framerate by the amount of change, raise TypeError if
+    # that didn't work.
     try:
         new_framerate = round(audio_seg.frame_rate * float(amount))
     except TypeError:
         msg = f"Cannot change audio speed by {amount!r}"
         raise TypeError(msg)
 
-    return audio_seg._spawn(
+    # Spawn a new audio segment using all the same data and properties,
+    # override the framerate
+    new_audio = audio_seg._spawn(
         audio_seg.raw_data, overrides={"frame_rate": new_framerate}
     )
+
+    # Set to original framerate (apparently fixes playback in some players)
+    # See https://stackoverflow.com/a/51434954
+    return new_audio.set_frame_rate(audio_seg.frame_rate)
 
 
 # `AudioSegment.from_file(...) @ Semitones(3)`
