@@ -16,8 +16,18 @@ def nightcore(
 ) -> AudioSegment:
     """Modify the speed and pitch of audio or a file by a given amount
 
-    `kwargs` will be passed to `AudioSegment.from_file` if `audio` is not an
-    AudioSegment.
+    Examples
+    --------
+    This function can be used as an effect on `AudioSegment` instances.
+        >>> import nightcore as nc
+        >>> AudioSegment.from_file("example.mp3").nightcore(nc.Tones(1))
+
+    `nightcore` will create an `AudioSegment` if used as a function.
+        >>> import nightcore as nc
+        >>> nc.nightcore("example.mp3", nc.Tones(1))
+
+    Keyword arguments will be passed to `AudioSegment.from_file` if `audio`
+    is not an AudioSegment.
     """
 
     # This function is an effect, but it can also be used by itself.
