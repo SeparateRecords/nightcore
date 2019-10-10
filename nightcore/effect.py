@@ -39,6 +39,11 @@ def nightcore(
 
     Passing the keyword arguments to `AudioSegment.from_file`
         >>> nightcore("badly_named", nc.Octaves(1), format="ogg")
+
+    Raises
+    ------
+    ValueError:
+    `amount` cannot be converted to `float`.
     """
 
     # This function is an effect, but it can also be used by itself.
@@ -52,13 +57,9 @@ def nightcore(
         # Pass the remaining kwargs to from_file and use the returned audio
         audio_seg = AudioSegment.from_file(audio, **kwargs)
 
-    # Multiply the old framerate by the amount of change, raise TypeError if
-    # that didn't work.
-    try:
-        new_framerate = round(audio_seg.frame_rate * float(amount))
-    except TypeError:
-        msg = f"Cannot change audio speed by {amount!r}"
-        raise TypeError(msg)
+    # Multiply the old framerate by the amount of change. Exceptions raised
+    # will propagate out
+    new_framerate = round(audio_seg.frame_rate * float(amount))
 
     # Spawn a new audio segment using all the same data and properties,
     # override the framerate
