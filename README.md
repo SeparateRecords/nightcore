@@ -24,7 +24,7 @@ $ poetry install
 $ poetry build
 ```
 
-## Usage
+## CLI Usage
 
 `nightcore` is predictable and ensures there is no unexpected behaviour. As the CLI relies on FFmpeg under the hood, any format supported by FFmpeg is supported by the CLI.
 
@@ -79,3 +79,63 @@ To compensate for a pitch increase, the output track will have a default +2db ba
 ```console
 $ nightcore music.mp3 --no-eq > out.mp3
 ```
+
+## API Usage
+
+The nightcore API is designed around `pydub.AudioSegment`, and can be used as either a function or effect.  This repository contains a 5 second mp3 file at 440hz (A4), if you want to try this in a repl.
+
+As the word `nightcore` is long, it's recommended to import the module as `nc`.
+
+### Classes
+
+There are a bunch of public dataclasses that can be used to speed up audio. These are:
+
+* `Octaves`
+* `Tones`
+* `Semitones`
+* `Percent`
+
+These dataclasses have appropriate operators implemented.
+
+```python
+>>> import nightcore as nc
+>>> nc.Tones(1) == nc.Semitones(2)
+True
+>>> 1 * nc.Percent(150)
+1.5
+```
+
+### Usage as a function
+
+You can either use a path to a file or an `AudioSegment`. If the first argument is a path, any additional keywords will be passed to `AudioSegment.from_file()`. It will return another audio segment.
+
+```python
+import nightcore as nc
+
+audio = nc.nightcore("/your/audio/file.mp3", nc.Semitones(1))
+```
+
+### Usage as an effect
+
+The easiest way is to use the `@` operator on an `AudioSegment` once `nightcore` has been imported.
+
+```python
+from pydub import AudioSegment
+import nightcore as nc
+
+audio = AudioSegment.from_file("example.mp3") @ nc.Tones(2)
+```
+
+The example above is functionally equivalent to the following example.
+
+```python
+from pydub import AudioSegment
+import nightcore as nc
+
+amount = nc.Tones(2)
+audio = AudioSegment.from_file("example.mp3").nightcore(amount)
+```
+
+## License
+
+This project is licensed under the MIT license.
