@@ -49,7 +49,10 @@ class BaseInterval(RelativeChange):
     Subclasses must override `n_per_octave`.
     """
 
-    n_per_octave: int
+    @property
+    @abstractmethod
+    def n_per_octave(self) -> int:
+        raise NotImplementedError
 
     def as_percent(self) -> float:
         return 2 ** (self.amount / self.n_per_octave)
