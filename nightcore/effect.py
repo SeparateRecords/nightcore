@@ -75,9 +75,13 @@ def nightcore(
     return new_audio.set_frame_rate(audio_seg.frame_rate)
 
 
-# `AudioSegment.from_file(...) @ Semitones(3)`
 @register_pydub_effect("__matmul__")
 def _nightcore_matmul_op(self, other: ChangeAmount):
+    """Return the AudioSegment at the new pitch/speed
+
+    Example:
+        >>> AudioSegment.from_file(...) @ Semitones(3)
+    """
     if hasattr(other, "__float__"):
         return self.nightcore(other)
     else:
