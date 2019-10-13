@@ -165,7 +165,7 @@ audio = AudioSegment.from_file("example.mp3").nightcore(amount)
 
 ### Subclassing `RelativeChange` or `BaseInterval`
 
-Creating a `RelativeChange` subclass only requires overriding `as_percent(self)`.
+Creating a `RelativeChange` subclass only requires overriding `as_percent(self)`. Overriding the `__init__()` method also requires a call to `super().__init__()` to set the amount, as `self.amount` cannot be assigned to.
 
 ```python
 import nightcore as nc
@@ -174,6 +174,7 @@ class NoChange(nc.RelativeChange):
     def as_percent(self):
         return 1.0  # 1.0 is no change (213 * 1 == 213)
 
+assert NoChange(8).amount == 8  # True
 assert NoChange(123) == NoChange(28980)  # True
 ```
 
