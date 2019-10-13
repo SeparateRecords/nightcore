@@ -90,6 +90,34 @@ The API itself performs no equalization, unlike the CLI.
 
 As the word `nightcore` is long, it's recommended to import the module as `nc`.
 
+### Quickstart
+
+The `nightcore` function returns a `pydub.AudioSegment`. [See here for documentation](https://github.com/jiaaro/pydub/blob/master/API.markdown).
+
+```python
+import nightcore as nc
+
+# Change audio pitch/speed by any of Octaves, Tones, Semitones, or Percent
+audio = nc.nightcore("/path/to/your/file.mp3", nc.Tones(1))
+audio.export("/path/to/your/new_file.mp3")
+```
+
+Say you've already got an audio segment, you can use the @ operator (once `nightcore` is imported) to create a new audio segment.
+
+```python
+import nightcore as nc
+from pydub import AudioSegment
+
+audio = AudioSegment.from_file("tests/test.mp3")
+
+faster = audio @ nc.Semitones(3)
+
+# The @ operator just calls the function (with some operator-sepcific logic).
+# If a linter or type checker doesn't like it, you can call the function with
+# the audio instead.
+slower = nc.nightcore(audio, nc.Octaves(-1))
+```
+
 ### Classes
 
 `nightcore` contains dataclasses to represent a relative change in speed. For example, increasing the pitch by 3 tones is a (roughly) 141.4% increase in speed.
