@@ -14,10 +14,10 @@ amount_types = {cls.__name__.lower(): cls for cls in change_classes}
 @click.argument("AMOUNT", type=float, default=2)
 @click.argument("AMOUNT_TYPE", default="semitones",
                 type=click.Choice(amount_types.keys(), case_sensitive=False))
-@click.option("--output", "-o", required=False, default=stdout.buffer,
+@click.option("--output", "-o", default=stdout.buffer,
               type=click.File(mode="wb"), metavar="<file>",
               help="Output to file instead of stdout")
-@click.option("--format", "-f", "file_format", required=False,
+@click.option("--format", "-f", "file_format",
               help="Override the inferred file format", metavar="<format>")
 @click.option("--codec", "-c", help="Specify a codec")
 @click.option("--no-eq", is_flag=True,
