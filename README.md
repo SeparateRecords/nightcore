@@ -92,42 +92,18 @@ As the word `nightcore` is long, it's recommended to import the module as `nc`.
 
 ### Classes
 
-`nightcore` contains dataclasses to represent a relative change in speed. For example, increasing the pitch by 3 tones is a 141.4213562373095% increase in speed.
+`nightcore` contains dataclasses to represent a relative change in speed. For example, increasing the pitch by 3 tones is a (roughly) 141.4% increase in speed.
 
-See [subclassing RelativeChange and BaseInterval](#subclassing) for example subclasses.
+Use any of `Octaves`, `Tones`, `Semitones`, or `Percent` for changing audio speed.
 
-* `RelativeChange` (ABC)
-  * `BaseInterval` (ABC)
-    * `Octaves`
-    * `Tones`
-    * `Semitones`
-  * `Percent`
-
-Use any of Octaves, Tones, Semitones, or Percent when changing audio speed.
+See [subclassing RelativeChange and BaseInterval](#subclassing) for examples of how to define a custom change.
 
 ```python
 >>> import nightcore as nc
-
->>> 2 * nc.Percent(200)
-4.0
->>> 6 + nc.Percent(50)  # 6 + (6 * .5)
-9.0
-
 >>> nc.Octaves(1) == nc.Tones(6) == nc.Semitones(12)
 True
->>> # Equivalent to `nc.Semitones(3).as_percent()`
->>> float(nc.Semitones(3))
-1.189207115002721
-
->>> # Amounts will be normalized to the unit of the multiplier
 >>> nc.Semitones(2) * nc.Tones(3)  # 3 tones = 6 semitones
 Semitones(amount=12.0)
-
->>> # Multiplying an int by 3 tones makes no sense
->>> 2 * nc.Tones(3)
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: unsupported operand type(s) for *: 'int' and 'Tones'
 ```
 
 ### Usage as a function
@@ -167,6 +143,15 @@ audio = AudioSegment.from_file("example.mp3").nightcore(amount)
 
 ### Subclassing `RelativeChange` or `BaseInterval`
 
+Class hierarchy:
+
+* `RelativeChange` (ABC)
+  * `BaseInterval` (ABC)
+    * `Octaves`
+    * `Tones`
+    * `Semitones`
+  * `Percent`
+
 Creating a `RelativeChange` subclass only requires overriding `as_percent(self)`. Overriding the `__init__()` method also requires a call to `super().__init__()` to set the amount, as `self.amount` cannot be assigned to.
 
 ```python
@@ -190,6 +175,8 @@ class Cents(nc.BaseInterval):
 
 assert Cents(100) == nc.Semitones(1)  # True
 ```
+
+Intervals will be normalized to the unit of the left hand side. `nc.Tones(2) * nc.Octaves(1)` will convert the octaves to tones, then do the math. Additionally, intervals can be converted between each other (`nc.Semitones(nc.Octaves(3))`).
 
 ## License
 
