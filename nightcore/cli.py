@@ -19,10 +19,11 @@ amount_types = {cls.__name__.lower(): cls for cls in change_classes}
               help="Output to file instead of stdout")
 @click.option("--format", "-f", "file_format", required=False,
               help="Override the inferred file format", metavar="<format>")
+@click.option("--codec", "-c", help="Specify a codec")
 @click.option("--no-eq", is_flag=True,
               help="Disable the default bass boost and treble reduction")
 @click.version_option(nc.__version__)
-def cli(file, amount, amount_type, output, file_format, no_eq):
+def cli(file, amount, amount_type, output, file_format, codec, no_eq):
     fail = click.get_current_context().fail
 
     if output is stdout.buffer and stdout.isatty():
@@ -30,7 +31,7 @@ def cli(file, amount, amount_type, output, file_format, no_eq):
 
     change = amount_types[amount_type](amount)
 
-    audio = nc.nightcore(file, change, format=file_format)
+    audio = nc.nightcore(file, change, format=file_format, codec=codec)
 
     params = []
     if not no_eq and change.as_percent() > 1:
