@@ -92,7 +92,7 @@ As the word `nightcore` is long, it's recommended to import the module as `nc`.
 
 ### Quickstart
 
-The `nightcore` function returns a `pydub.AudioSegment`. [See here for documentation](https://github.com/jiaaro/pydub/blob/master/API.markdown).
+The `nightcore` function returns a `pydub.AudioSegment`. [See here for documentation](https://github.com/jiaaro/pydub/blob/master/API.markdown#audiosegment).
 
 ```python
 import nightcore as nc
