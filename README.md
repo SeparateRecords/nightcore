@@ -64,13 +64,15 @@ If the output cannot be redirected, you can specify an output file with `--outpu
 $ nightcore music.mp3 --output out.mp3
 ```
 
-### Format
+### Format & Codec
 
-If file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`)
+If file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`). The file will always be exported as mp3.
 
 ```console
 $ nightcore badly_named_file --format ogg > out.mp3
 ```
+
+The codec can be manually set using `--codec` or `-c`.
 
 ### EQ
 
