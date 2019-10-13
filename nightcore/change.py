@@ -65,6 +65,12 @@ class BaseInterval(RelativeChange):
     def _arithmetic(self, op, other):
         """Perform an arithmetic operation (normalize to same interval)
 
+        Do arithmetic on another object. If the object is a `BaseInterval`,
+        normalize it to this interval, then do the calculation. This allows
+        intervals to work together as expected.
+
+        This allows seamless math, such as:
+            >>> Semitones(1) + Tones(1) == Semitones(3)
         """
         cls = self.__class__
 
