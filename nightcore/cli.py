@@ -12,16 +12,32 @@ amount_types = {cls.__name__.lower(): cls for cls in change_classes}
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("FILE", type=click.Path(exists=True), required=True)
 @click.argument("AMOUNT", type=float, default=2)
-@click.argument("AMOUNT_TYPE", default="semitones",
-                type=click.Choice(amount_types.keys(), case_sensitive=False))
-@click.option("--output", "-o", default=stdout.buffer,
-              type=click.File(mode="wb"), metavar="<file>",
-              help="Output to file instead of stdout")
-@click.option("--format", "-f", "file_format",
-              help="Override the inferred file format", metavar="<format>")
+@click.argument(
+    "AMOUNT_TYPE",
+    default="semitones",
+    type=click.Choice(amount_types.keys(), case_sensitive=False),
+)
+@click.option(
+    "--output",
+    "-o",
+    default=stdout.buffer,
+    type=click.File(mode="wb"),
+    metavar="<file>",
+    help="Output to file instead of stdout",
+)
+@click.option(
+    "--format",
+    "-f",
+    "file_format",
+    help="Override the inferred file format",
+    metavar="<format>",
+)
 @click.option("--codec", "-c", help="Specify a codec")
-@click.option("--no-eq", is_flag=True,
-              help="Disable the default bass boost and treble reduction")
+@click.option(
+    "--no-eq",
+    is_flag=True,
+    help="Disable the default bass boost and treble reduction",
+)
 @click.version_option(nc.__version__)
 def cli(file, amount, amount_type, output, file_format, codec, no_eq):
     fail = click.get_current_context().fail
