@@ -30,9 +30,9 @@ amount_types = {cls.__name__.lower(): cls for cls in change_classes}
     "-f",
     "file_format",
     help="Override the inferred file format",
-    metavar="<format>",
+    metavar="<fmt>",
 )
-@click.option("--codec", "-c", help="Specify a codec")
+@click.option("--codec", "-c", help="Specify a codec", metavar="<codec>")
 @click.option(
     "--no-eq",
     is_flag=True,
