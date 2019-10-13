@@ -1,6 +1,7 @@
 import operator
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
+from typing import Union
 
 
 @dataclass(frozen=True, eq=False)
@@ -48,6 +49,10 @@ class BaseInterval(RelativeChange):
 
     Subclasses must override `n_per_octave`.
     """
+    def __init__(self, amount: Union[float, 'BaseInterval']):
+        if isinstance(amount, BaseInterval):
+            amount = amount.amount * (self.n_per_octave / amount.n_per_octave)
+        super().__init__(amount)
 
     @property
     @abstractmethod
