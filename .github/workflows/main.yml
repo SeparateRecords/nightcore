@@ -1,0 +1,25 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  run_tests:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - uses: dschep/install-poetry-action@v1.2
+    - name: Install FFmpeg
+      run: apt install ffmpeg
+    - name: Install project
+      run: poetry install
+    - name: Run tests
+      run: poetry run python3 -m pytest tests/
