@@ -1,8 +1,28 @@
-# Nightcore - Easily modify speed/pitch
+<div align="center">
 
-A focused CLI and API for changing the pitch and speed of audio. **Requires FFmpeg.**
+<h1>Nightcore - Easily modify speed/pitch</h1>
+
+<p>
+A focused CLI and API for changing the pitch and speed of audio. <b>Requires FFmpeg.</b>
+</p>
+
+[![Code style: black](https://img.shields.io/badge/code%20style-black-240040.svg)](https://github.com/psf/black)
+[![Latest release](https://img.shields.io/pypi/v/nightcore?color=blue)](https://pypi.org/project/nightcore)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/nightcore?color=3eb984)](https://python.org)
+[![Requires FFmpeg](https://img.shields.io/badge/requires-FFmpeg-green)](https://ffmpeg.org)
+[![MIT License](https://img.shields.io/pypi/l/nightcore?color=e6ed1f)](https://github.com/SeparateRecords/nightcore/blob/master/LICENSE)
+
+<p>
+  <code>
+    <a href="#install">Installation</a> | <a href="#cli">CLI Usage</a> | <a href="#api">API Usage</a>
+  </code>
+</p>
+
+</div>
 
 > I had the idea for this a long time ago, and wanted to make it to prove a point. This program is not intended for, nor should it be used for, copyright infringement and piracy. [**Nightcore is not, and has never been, fair use**](https://www.avvo.com/legal-answers/does-making-a--nightcore--version-of-a-song--speed-2438914.html).
+
+<a name="install"></a>
 
 ## Installation
 
@@ -10,9 +30,11 @@ A focused CLI and API for changing the pitch and speed of audio. **Requires FFmp
 
 With FFmpeg installed, you can use `pip` to install `nightcore` (although [pipx](https://pipxproject.github.io/pipx/) is recommended when only installing the CLI)
 
+<div align="center">
 ```sh
 pip install nightcore
 ```
+</div>
 
 ### Building from source
 
@@ -23,6 +45,8 @@ $ git clone https://github.com/SeparateRecords/nightcore
 $ poetry install
 $ poetry build
 ```
+
+<a name="cli"></a>
 
 ## CLI Usage
 
@@ -81,6 +105,8 @@ To compensate for a pitch increase, the output track will have a default +2db ba
 ```console
 $ nightcore music.mp3 --no-eq > out.mp3
 ```
+
+<a name="api"></a>
 
 ## API Usage
 
