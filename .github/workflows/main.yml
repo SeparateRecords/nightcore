@@ -18,7 +18,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - uses: dschep/install-poetry-action@v1.2
     - name: Install FFmpeg
-      run: apt install ffmpeg
+      run: sudo apt install ffmpeg
     - name: Install project
       run: poetry install
     - name: Run tests
