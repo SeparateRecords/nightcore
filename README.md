@@ -30,11 +30,9 @@ A focused CLI and API for changing the pitch and speed of audio. <b>Requires FFm
 
 With FFmpeg installed, you can use `pip` to install `nightcore` (although [pipx](https://pipxproject.github.io/pipx/) is recommended when only installing the CLI)
 
-<div align="center">
 ```sh
 pip install nightcore
 ```
-</div>
 
 ### Building from source
 
