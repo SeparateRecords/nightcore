@@ -2,6 +2,7 @@
 from sys import stdout
 
 import click
+import pydub
 
 import nightcore as nc
 
@@ -21,7 +22,7 @@ amount_types = {cls.__name__.lower(): cls for cls in change_classes}
     "--output",
     "-o",
     default=stdout.buffer,
-    type=click.File(mode="wb"),
+    type=click.Path(),
     metavar="<file>",
     help="Output to file instead of stdout",
 )
@@ -47,7 +48,10 @@ def cli(file, amount, amount_type, output, file_format, codec, no_eq):
 
     change = amount_types[amount_type](amount)
 
-    audio = nc.nightcore(file, change, format=file_format, codec=codec)
+    try:
+        audio = nc.nightcore(file, change, format=file_format, codec=codec)
+    except pydub.exceptions.CouldntDecodeError:
+        fail("Failed to decode file for processing")
 
     params = []
     if not no_eq and change.as_percent() > 1:
@@ -57,7 +61,10 @@ def cli(file, amount, amount_type, output, file_format, codec, no_eq):
         # situation, so it can be disabled with `--no-eq`
         params += ["-af", "bass=g=2, treble=g=-1"]
 
-    audio.export(output, parameters=params)
+    try:
+        audio.export(output, parameters=params)
+    except pydub.exceptions.CouldntEncodeError:
+        fail("Failed to encode file for export")
 
 
 if __name__ == "__main__":
