@@ -1,7 +1,15 @@
+from __future__ import annotations
+
 import operator
-from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from typing import Union
+from dataclasses import dataclass
+from typing import TYPE_CHECKING, Union
+
+from nightcore.effect import nightcore
+
+if TYPE_CHECKING:
+    from os import PathLike
+    from pydub import AudioSegment
 
 
 @dataclass(frozen=True, eq=False)
@@ -15,6 +23,14 @@ class RelativeChange(ABC):
         """Returns a percentage change, as a float (1.0 == 100%).
         Note that 1.0 represents no change (5 * 1.0 == 5)"""
         raise NotImplementedError
+
+    def __rmatmul__(self, other: Union[AudioSegment, PathLike]):
+        """Audio at new pitch/speed, create an AudioSegment from path if needed
+
+        Example:
+            >>> AudioSegment.from_file(...) @ Semitones(3)
+        """
+        return nightcore(other, self)
 
     def __neg__(self):
         return self.__class__(-self.amount) if self.amount > 0 else self
@@ -49,7 +65,8 @@ class BaseInterval(RelativeChange):
 
     Subclasses must override `n_per_octave`.
     """
-    def __init__(self, amount: Union[float, 'BaseInterval']):
+
+    def __init__(self, amount: Union[float, "BaseInterval"]):
         if isinstance(amount, BaseInterval):
             amount = amount.amount * (self.n_per_octave / amount.n_per_octave)
         super().__init__(amount)

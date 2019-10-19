@@ -172,7 +172,7 @@ For clarity, it is recommended to use [one of the above classes](#classes), howe
 
 ### Usage as an effect
 
-The easiest way is to use the `@` operator on an `AudioSegment` once `nightcore` has been imported.
+The easiest way is to use the `@` operator on an `AudioSegment`.
 
 ```python
 from pydub import AudioSegment
@@ -181,7 +181,7 @@ import nightcore as nc
 audio = AudioSegment.from_file("example.mp3") @ nc.Tones(2)
 ```
 
-The example above is functionally equivalent to the following example.
+The example above is functionally equivalent to the following, but easier to read.
 
 ```python
 from pydub import AudioSegment

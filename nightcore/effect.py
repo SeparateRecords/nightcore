@@ -1,18 +1,20 @@
+from __future__ import annotations
+
 from os import PathLike
-from typing import Union
+from typing import TYPE_CHECKING, Union, Any
 
 from pydub import AudioSegment
 from pydub.utils import register_pydub_effect
 
-from nightcore.change import RelativeChange
-
-ChangeAmount = Union[RelativeChange, float]
-AudioOrPath = Union[AudioSegment, PathLike]
+if TYPE_CHECKING:
+    from nightcore.change import RelativeChange
 
 
 @register_pydub_effect("nightcore")
 def nightcore(
-    audio: AudioOrPath, amount: ChangeAmount, **kwargs
+    audio: Union[AudioSegment, PathLike],
+    amount: Union[RelativeChange, float],
+    **kwargs: Any,
 ) -> AudioSegment:
     """Modify the speed and pitch of audio or a file by a given amount
 
@@ -73,16 +75,3 @@ def nightcore(
     # Set to original framerate (apparently fixes playback in some players)
     # See https://stackoverflow.com/a/51434954
     return new_audio.set_frame_rate(audio_seg.frame_rate)
-
-
-@register_pydub_effect("__matmul__")
-def _nightcore_matmul_op(self, other: ChangeAmount):
-    """Return the AudioSegment at the new pitch/speed
-
-    Example:
-        >>> AudioSegment.from_file(...) @ Semitones(3)
-    """
-    if hasattr(other, "__float__"):
-        return self.nightcore(other)
-    else:
-        return NotImplemented
