@@ -126,7 +126,7 @@ audio = nc.nightcore("/path/to/your/file.mp3", nc.Tones(1))
 audio.export("/path/to/your/new_file.mp3")
 ```
 
-Say you've already got an audio segment, you can use the @ operator (once `nightcore` is imported) to create a new audio segment.
+Say you've already got an audio segment, you can use the @ operator to create a *new* audio segment, or pass the audio in as the first argument.
 
 ```python
 import nightcore as nc
@@ -136,9 +136,8 @@ audio = AudioSegment.from_file("tests/test.mp3")
 
 faster = audio @ nc.Semitones(3)
 
-# The @ operator just calls the function (with some operator-sepcific logic).
-# If a linter or type checker doesn't like it, you can call the function with
-# the audio instead.
+# Identical to the above, but more verbose. If using the @ operator isn't
+# clear in context, this may be a better solution.
 slower = nc.nightcore(audio, nc.Octaves(-1))
 ```
 
