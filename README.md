@@ -126,7 +126,7 @@ audio = nc.nightcore("/path/to/your/file.mp3", nc.Tones(1))
 audio.export("/path/to/your/new_file.mp3")
 ```
 
-Say you've already got an audio segment, you can use the @ operator to create a *new* audio segment, or pass the audio in as the first argument.
+Say you've already got an audio segment, you can create a *new* audio segment by using the @ operator, or pass the audio in as the first argument to the `nightcore` function.
 
 ```python
 import nightcore as nc
