@@ -121,22 +121,14 @@ class BaseInterval(RelativeChange):
         return self._arithmetic(operator.mod, other)
 
 
-class Semitones(BaseInterval):
-    """Increase or decrease the speed by an amount in semitones"""
-
-    n_per_octave = 12
-
-
-class Tones(BaseInterval):
-    """Increase or decrease the speed by an amount in tones"""
-
-    n_per_octave = 6
+def _interval(name: str, *, per_octave: int) -> BaseInterval:
+    """Define an interval"""
+    return type(name, (BaseInterval,), {"n_per_octave": per_octave})
 
 
-class Octaves(BaseInterval):
-    """Increase or decrease the speed by an amount in octaves"""
-
-    n_per_octave = 1
+Octaves = _interval("Octaves", per_octave=1)
+Tones = _interval("Tones", per_octave=6)
+Semitones = _interval("Semitones", per_octave=12)
 
 
 class Percent(RelativeChange):
