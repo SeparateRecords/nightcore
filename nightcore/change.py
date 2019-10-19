@@ -60,13 +60,59 @@ class RelativeChange(ABC):
         return self.as_percent()
 
 
+class Percent(RelativeChange):
+    """Increase or decrease the speed by a percentage (100 == no change)"""
+
+    def as_percent(self) -> float:
+        return self.amount / 100
+
+    def __add__(self, other):
+        return self.__class__(self.amount + other)
+
+    def __radd__(self, other):
+        return other + (other * self)
+
+    def __sub__(self, other):
+        return self.__class__(self.amount - other)
+
+    def __rsub__(self, other):
+        return other - (other * self)
+
+    def __mul__(self, other):
+        return self.__class__(self.amount * other)
+
+    def __rmul__(self, other):
+        return other * self.as_percent()
+
+    def __truediv__(self, other):
+        return self.__class__(self.amount / other)
+
+    def __rtruediv__(self, other):
+        return other / self.as_percent()
+
+    def __floordiv__(self, other):
+        return self.__class__(self.amount // other)
+
+    def __rfloordiv__(self, other):
+        return other // self.as_percent()
+
+    def __mod__(self, other):
+        return self.__class__(self.amount % other)
+
+    def __rmod__(self, other):
+        return other % self.as_percent()
+
+
+# --- Intervals ---
+
+
 class BaseInterval(RelativeChange):
     """Base class for implementing types of intervals (semitones, etc...)
 
     Subclasses must override `n_per_octave`.
     """
 
-    def __init__(self, amount: Union[float, "BaseInterval"]):
+    def __init__(self, amount: Union[float, BaseInterval]):
         if isinstance(amount, BaseInterval):
             amount = amount.amount * (self.n_per_octave / amount.n_per_octave)
         super().__init__(amount)
@@ -129,46 +175,3 @@ def _interval(name: str, *, per_octave: int) -> BaseInterval:
 Octaves = _interval("Octaves", per_octave=1)
 Tones = _interval("Tones", per_octave=6)
 Semitones = _interval("Semitones", per_octave=12)
-
-
-class Percent(RelativeChange):
-    """Increase or decrease the speed by a percentage (100 == no change)"""
-
-    def as_percent(self) -> float:
-        return self.amount / 100
-
-    def __add__(self, other):
-        return self.__class__(self.amount + other)
-
-    def __radd__(self, other):
-        return other + (other * self)
-
-    def __sub__(self, other):
-        return self.__class__(self.amount - other)
-
-    def __rsub__(self, other):
-        return other - (other * self)
-
-    def __mul__(self, other):
-        return self.__class__(self.amount * other)
-
-    def __rmul__(self, other):
-        return other * self.as_percent()
-
-    def __truediv__(self, other):
-        return self.__class__(self.amount / other)
-
-    def __rtruediv__(self, other):
-        return other / self.as_percent()
-
-    def __floordiv__(self, other):
-        return self.__class__(self.amount // other)
-
-    def __rfloordiv__(self, other):
-        return other // self.as_percent()
-
-    def __mod__(self, other):
-        return self.__class__(self.amount % other)
-
-    def __rmod__(self, other):
-        return other % self.as_percent()
