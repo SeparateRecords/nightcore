@@ -10,13 +10,28 @@ change_classes = [nc.Octaves, nc.Tones, nc.Semitones, nc.Percent]
 amount_types = {cls.__name__.lower(): cls for cls in change_classes}
 
 
+class DictChoice(click.Choice):
+    def __init__(self, choices, case_sensitive=False):
+        super().__init__(choices.keys(), case_sensitive)
+        self.choices_dict = choices
+
+    def convert(self, value, param, ctx):
+        rv = super().convert(value, param, ctx)
+        return self.choices_dict[rv]
+
+    def get_metavar(self, param):
+        # Return the choices with no surrounding [ ], because the option
+        # is optional anyway, and [[octaves|tones|etc...]] looks funky
+        return "|".join(self.choices)
+
+
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("FILE", type=click.Path(exists=True), required=True)
 @click.argument("AMOUNT", type=float, default=2)
 @click.argument(
     "AMOUNT_TYPE",
     default="semitones",
-    type=click.Choice(amount_types.keys(), case_sensitive=False),
+    type=DictChoice(amount_types),
 )
 @click.option(
     "--output",
@@ -46,7 +61,7 @@ def cli(file, amount, amount_type, output, file_format, codec, no_eq):
     if output is stdout.buffer and stdout.isatty():
         fail("output should be redirected if not using `--output <file>`")
 
-    change = amount_types[amount_type](amount)
+    change = amount_type(amount)
 
     try:
         audio = nc.nightcore(file, change, format=file_format, codec=codec)
