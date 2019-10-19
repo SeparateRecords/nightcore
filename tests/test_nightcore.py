@@ -33,3 +33,11 @@ def test_from_file(audio):
 
     from_path = nightcore(audio_path, change)
     assert nightcore(audio, change) == from_path
+
+
+def test_rmatmul(audio):
+    change = Tones(1)
+
+    assert nightcore(str(audio_path), change) == audio @ change
+    assert nightcore(audio_path, change) == audio @ change
+    assert nightcore(audio, change) == audio @ change
