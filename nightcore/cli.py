@@ -113,14 +113,12 @@ def cli(
         file_format,
         # 4. Inferred from input file
         Path(file).suffix,
-        # 5. Fall back to mp3, just in case!
-        "mp3",
     ]
 
     # Clean it up and use the first one that's a valid format:
-    # First truthy value, converted to string...
-    export_format_raw = str(next(fmt for fmt in fmt_prefs if fmt))
-    # ... then remove all non-alphabetic characters.
+    # First truthy value converted to string, or "mp3" in case all falsy...
+    export_format_raw = next((str(fmt) for fmt in fmt_prefs if fmt), "mp3")
+    # ... then remove all non-alphanumeric characters.
     export_format = "".join(filter(lambda c: c.isalnum(), export_format_raw))
 
     # --- Export the audio ---
