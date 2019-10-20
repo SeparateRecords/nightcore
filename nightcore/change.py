@@ -125,15 +125,19 @@ class BaseInterval(RelativeChange):
     def as_percent(self) -> float:
         return 2 ** (self.amount / self.n_per_octave)
 
-    def _arithmetic(self, op, other):
+    def _arithmetic(self, op, other) -> BaseInterval:
         """Perform an arithmetic operation (normalize to same interval)
 
         Do arithmetic on another object. If the object is a `BaseInterval`,
         normalize it to this interval, then do the calculation. This allows
         intervals to work together as expected.
-
-        This allows seamless math, such as:
+            >>> Octaves(3) + 2 == Octaves(5)
             >>> Semitones(1) + Tones(1) == Semitones(3)
+
+        Because the multiplicand is normalized to the same unit, there can be
+        some surprising results, as with the example below. 1 tone is 2
+        semitones, so it's actually doing 2 x 2, not 2 x 1.
+            >>> Semitones(2) * Tones(1) == Semitones(4)
         """
         cls = self.__class__
 
