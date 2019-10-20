@@ -35,8 +35,8 @@ class DictChoice(click.Choice):
 @click.option(
     "--output",
     "-o",
-    default=stdout.buffer,
-    type=click.Path(),
+    type=click.Path(allow_dash=True),
+    default="-",
     metavar="<file>",
     help="Output to file instead of stdout",
 )
@@ -76,8 +76,12 @@ def cli(
 ):
     fail = ctx.fail
 
-    if output is stdout.buffer and stdout.isatty():
-        fail("output should be redirected if not using `--output <file>`")
+    # --- Determine output file ---
+
+    if output == "-":
+        if stdout.isatty():
+            fail("output should be redirected if not using `--output <file>`")
+        output = stdout.buffer
 
     # --- Create the audio ---
 
@@ -100,13 +104,17 @@ def cli(
 
     # --- Get the correct output format ---
 
-    # Order of preference for inferring the output format
     fmt_prefs = [
-        output_format,  # Explicit output file format
-        Path(output).suffix if output else None,  # Inferred from output file
-        file_format,  # Explicit input file format
-        Path(file).suffix,  # Inferred from input file
-        "mp3",  # Fall back to mp3, just in case!
+        # 1. Explicit output file format
+        output_format,
+        # 2. Inferred from output file
+        Path(output).suffix if isinstance(output, str) else None,
+        # 3. Explicit input file format
+        file_format,
+        # 4. Inferred from input file
+        Path(file).suffix,
+        # 5. Fall back to mp3, just in case!
+        "mp3",
     ]
 
     # Clean it up and use the first one that's a valid format:
