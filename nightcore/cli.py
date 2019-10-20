@@ -121,7 +121,7 @@ def cli(
     # First truthy value, converted to string...
     export_format_raw = str(next(fmt for fmt in fmt_prefs if fmt))
     # ... then remove all non-alphabetic characters.
-    export_format = "".join(filter(lambda c: c.isalpha(), export_format_raw))
+    export_format = "".join(filter(lambda c: c.isalnum(), export_format_raw))
 
     # --- Export the audio ---
 
