@@ -62,10 +62,19 @@ class DictChoice(click.Choice):
     help="Disable the default bass boost and treble reduction",
 )
 @click.version_option(nc.__version__)
+@click.pass_context
 def cli(
-    file, amount, amount_type, output, output_format, file_format, codec, no_eq
+    ctx,
+    file,
+    amount,
+    amount_type,
+    output,
+    output_format,
+    file_format,
+    codec,
+    no_eq,
 ):
-    fail = click.get_current_context().fail
+    fail = ctx.fail
 
     if output is stdout.buffer and stdout.isatty():
         fail("output should be redirected if not using `--output <file>`")
