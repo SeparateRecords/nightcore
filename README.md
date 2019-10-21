@@ -6,11 +6,11 @@
 A focused CLI and API for changing the pitch and speed of audio. <b>Requires FFmpeg.</b>
 </p>
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-240040.svg)](https://github.com/psf/black)
 [![Latest release](https://img.shields.io/pypi/v/nightcore?color=blue)](https://pypi.org/project/nightcore)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/nightcore?color=3eb984)](https://python.org)
-[![Requires FFmpeg](https://img.shields.io/badge/requires-FFmpeg-green)](https://ffmpeg.org)
-[![MIT License](https://img.shields.io/pypi/l/nightcore?color=e6ed1f)](https://github.com/SeparateRecords/nightcore/blob/master/LICENSE)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/nightcore?color=364ed6)](https://python.org)
+[![Requires FFmpeg](https://img.shields.io/badge/requires-FFmpeg-721d78)](https://ffmpeg.org)
+[![MIT License](https://img.shields.io/pypi/l/nightcore?color=460611)](https://github.com/SeparateRecords/nightcore/blob/master/LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000.svg)](https://github.com/psf/black)
 
 <p>
   <code>
