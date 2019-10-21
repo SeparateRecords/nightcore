@@ -120,126 +120,117 @@ $ nightcore music.mp3 --no-eq > out.mp3
 
 ## API Usage
 
-The nightcore API is designed around `pydub.AudioSegment`, and can be used as either a pure function or effect. This repository contains a 5 second mp3 file at 440hz (A4), if you want to try this in a REPL (`tests/test.mp3`).
+The nightcore API is built using [pydub](http://pydub.com), a high level audio processing library. It's worth reading a bit of its documentation ([or at least the section on exporting](https://github.com/jiaaro/pydub/blob/master/API.markdown#audiosegmentexport)), but you'll get by with only having read the examples below.
 
-The API itself performs no equalization, unlike the CLI.
+The API itself performs no equalization, unlike the CLI - see [nightcore/cli.py](nightcore/cli.py) for the implementation (search "parameters").
 
 As the word `nightcore` is long, it's recommended to import the module as `nc`.
 
 ### Quickstart
 
-The `nightcore` function returns a `pydub.AudioSegment`. [See here for documentation](https://github.com/jiaaro/pydub/blob/master/API.markdown#audiosegment).
+You can use any of `Octaves`, `Tones`, `Semitones`, or `Percent` to change speed.
+
+Using the @ operator with one of the above classes is the simplest way to create nightcore. The left hand side can be a path-like object or an `AudioSegment`. An `AudioSegment` will be returned.
 
 ```python
 import nightcore as nc
 
-# Change audio pitch/speed by any of Octaves, Tones, Semitones, or Percent
-audio = nc.nightcore("/path/to/your/file.mp3", nc.Tones(1))
-audio.export("/path/to/your/new_file.mp3")
+c5 = "tests/test.mp3" @ nc.Tones(2)
+
+c5.export("/tmp/a4_plus_two_tones.mp3")
+
+a4_at_150_pct = "tests/test.mp3" @ nc.Percent(150)  # 1.5x speed
 ```
 
-Say you've already got an audio segment, you can create a *new* audio segment by using the @ operator, or pass the audio in as the first argument to the `nightcore` function.
+You can also call the `nightcore` function, which is more verbose but gives you greater control. The @ operator is shorthand for this function.
+
+If the first argument is not an `AudioSegment`, any additional keyword arguments will be passed to `AudioSegment.from_file`.
 
 ```python
-import nightcore as nc
+# This...
+nc.nightcore("badly_named_file", nc.Tones(1), format="ogg")
+
+# is identical to... 
 from pydub import AudioSegment
 
-audio = AudioSegment.from_file("tests/test.mp3")
+AudioSegment.from_file("badly_named_file", format="ogg")
 
-faster = audio @ nc.Semitones(3)
-
-# Identical to the above, but more verbose. If using the @ operator isn't
-# clear in context, this may be a better solution.
-slower = nc.nightcore(audio, nc.Octaves(-1))
+nc.nightcore(audio, nc.Tones(1))
 ```
 
-### Classes
+<a name="types-in-detail"></a>
 
-`nightcore` contains dataclasses to represent a relative change in speed. For example, increasing the pitch by 3 tones is a (roughly) 141.4% increase in speed.
+### Types, in detail
 
-Use any of `Octaves`, `Tones`, `Semitones`, or `Percent` for changing audio speed.
+The public API is implemented using subclasses of the `RelativeChange` ABC.
 
-See [subclassing RelativeChange and BaseInterval](#subclassing) for examples of how to define a custom change.
+* [RelativeChange](#relativechange) (ABC)
+  * [BaseInterval](#baseinterval) (ABC)
+    * Octaves
+    * Tones
+    * Semitones
+  * [Percent](#percent)
+
+<a name="relativechange"></a>
+
+#### RelativeChange
+
+`RelativeChange` provides an implementation of comparison operators and unary positive/negative.
+
+Subclasses of `RelativeChange` must override the `as_percent()` method, which returns a float. 1.0 is 1x speed, no change.
+
+<a name="baseinterval"></a>
+
+#### BaseInterval & Co.
+
+`BaseInterval` implements comparison and arithmetic operators that will normalize the operand to the operator's unit.
 
 ```python
->>> import nightcore as nc
->>> nc.Octaves(1) == nc.Tones(6) == nc.Semitones(12)
+>>> nc.Semitones(12) == nc.Tones(6) == nc.Octaves(1)
 True
->>> nc.Semitones(2) * nc.Tones(3)  # 3 tones = 6 semitones
-Semitones(amount=12.0)
+
+# since 1 octave is 6 tones, the following is actually 3 * 6
+>>> nc.Tones(3) * nc.Octaves(1) == nc.Tones(18)
+True
+
+>>> nc.Semitones(1) + 2 == nc.Semitones(3)
+
+# This will raise TypeError, adding an interval to a number is meaningless
+>>> 2 + nc.Semitones(1)
 ```
 
-### Usage as a function
-
-This function will return a `pydub.AudioSegment`. If the first argument is path-like, any additional keywords will be passed to `AudioSegment.from_file()` to create an `AudioSegment`. Otherwise, if the first argument is already an `AudioSegment`, it will be used to create a new audio segment and will not be mutated.
+To create a new type of interval, simply set the class attribute `n_per_octave`. `BaseInterval` already implements `as_percent()`
 
 ```python
-import nightcore as nc
-
-audio = nc.nightcore("/your/audio/file.mp3", nc.Semitones(1))
+>>> class Cents(nc.BaseInterval):
+...     n_per_octave = 1200
+...
+>>> Cents(100) == Semitones(1)
+True
 ```
 
-For clarity, it is recommended to use [one of the above classes](#classes), however a float or int may also be used.
+<a name="percent"></a>
 
-### Usage as an effect
+#### Percent
 
-The easiest way is to use the `@` operator on an `AudioSegment`.
+`Percent` is a convenient and logical way to speed up a track by a factor of time, rather than pitch.
+
+It has appropriate arithmetic operators implemented.
 
 ```python
-from pydub import AudioSegment
-import nightcore as nc
-
-audio = AudioSegment.from_file("example.mp3") @ nc.Tones(2)
+>>> nc.Percent(100) == 1
+True
+>>> nc.Percent(50) + 50
+Percent(amount=100)
+>>> 2 * nc.Percent(200)
+4.0
+>>> 1 + nc.Percent(30)
+1.3
 ```
 
-The example above is functionally equivalent to the following, but easier to read.
+## Contributing
 
-```python
-from pydub import AudioSegment
-import nightcore as nc
-
-amount = nc.Tones(2)
-audio = AudioSegment.from_file("example.mp3").nightcore(amount)
-```
-
-<a name="subclassing"></a>
-
-### Subclassing `RelativeChange` or `BaseInterval`
-
-Class hierarchy:
-
-* `RelativeChange` (ABC)
-  * `BaseInterval` (ABC)
-    * `Octaves`
-    * `Tones`
-    * `Semitones`
-  * `Percent`
-
-Creating a `RelativeChange` subclass only requires overriding `as_percent(self)`. Overriding the `__init__()` method also requires a call to `super().__init__()` to set the amount, as `self.amount` cannot be assigned to.
-
-```python
-import nightcore as nc
-
-class NoChange(nc.RelativeChange):
-    def as_percent(self):
-        return 1.0  # 1.0 is no change (213 * 1 == 213)
-
-assert NoChange(8).amount == 8  # True
-assert NoChange(123) == NoChange(28980)  # True
-```
-
-`BaseInterval` implements `as_percent`, but all subclasses must set `n_per_octave`.
-
-```python
-import nightcore as nc
-
-class Cents(nc.BaseInterval):
-    n_per_octave = 1200
-
-assert Cents(100) == nc.Semitones(1)  # True
-```
-
-Intervals will be normalized to the unit of the left hand side. `nc.Tones(2) * nc.Octaves(1)` will convert the octaves to tones, then do the math. Additionally, intervals can be converted between each other (`nc.Semitones(nc.Octaves(3))`).
+Contributions, feedback, and feature requests are all welcome and greatly appreciated, no matter how small.
 
 ## License
 
