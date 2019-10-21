@@ -99,7 +99,7 @@ $ nightcore music.mp3 --output out.mp3
 To manually set the output format (useful if redirecting), use `--output-format` (`-x`).
 
 ```console
-$ nightcore music.mp3 --output-format ogg > badly_named
+$ nightcore music.mp3 --output-format ogg > music_nc.ogg
 ```
 
 If this option is not provided, the output format will be guessed in this order, defaulting to MP3 if all fail:
