@@ -78,23 +78,35 @@ When using percentages, `100 percent` means no change, `150 percent` is 1.5x spe
 $ nightcore music.mp3 150 percent > out.mp3
 ```
 
+### Format & Codec
+
+If file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`).
+
+```console
+$ nightcore --format ogg badly_named_file > out.mp3
+```
+
+The codec can be manually set using `--codec` (`-c`).
+
 ### Output
 
-If the output cannot be redirected, you can specify an output file with `--output` (`-o`)
+If the output cannot be redirected, you can specify an output file with `--output` (`-o`). The format will be guessed from the extension.
 
 ```console
 $ nightcore music.mp3 --output out.mp3
 ```
 
-### Format & Codec
-
-If file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`). The file will always be exported as mp3.
+To manually set the output format (useful if redirecting), use `--output-format` (`-x`).
 
 ```console
-$ nightcore badly_named_file --format ogg > out.mp3
+$ nightcore music.mp3 --output-format ogg > badly_named
 ```
 
-The codec can be manually set using `--codec` or `-c`.
+If this option is not provided, the output format will be guessed in this order, defaulting to MP3 if all fail:
+
+1. Output option file extension (`--output example.wav`)
+2. Explicit input file type (`--format ogg`)
+3. Input file extension (`music.ogg`)
 
 ### EQ
 
