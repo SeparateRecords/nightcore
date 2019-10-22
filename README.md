@@ -140,7 +140,7 @@ nc_audio = "tests/test.mp3" @ nc.Tones(1)
 nc_audio.export("tests/test_nc.mp3")
 ```
 
-The @ operator is shorthand for the `nightcore` function. It only needs to be used if:
+The @ operator is shorthand for the `nightcore` function. The function only needs to be used if:
 
 - You need to provide additional keyword arguments to `AudioSegment.from_file`
 - The operator is less readable in context
@@ -149,6 +149,7 @@ The @ operator is shorthand for the `nightcore` function. It only needs to be us
 ```python
 import nightcore as nc
 
+# Additional keyword args are passed to AudioSegment.from_file
 audio = nc.nightcore("/tmp/badly_named_audio", nc.Semitones(2), format="ogg")
 ```
 
