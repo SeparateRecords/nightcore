@@ -7,8 +7,12 @@ import pydub
 
 import nightcore as nc
 
-change_classes = [nc.Octaves, nc.Tones, nc.Semitones, nc.Percent]
-amount_types = {cls.__name__.lower(): cls for cls in change_classes}
+amount_types = {
+    "octaves": nc.Octaves,
+    "tones": nc.Tones,
+    "semitones": nc.Semitones,
+    "percent": nc.Percent,
+}
 
 
 class DictChoice(click.Choice):
