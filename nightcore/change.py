@@ -171,11 +171,11 @@ class BaseInterval(RelativeChange):
         return self._arithmetic(operator.mod, other)
 
 
-def _interval(name: str, *, per_octave: int) -> BaseInterval:
-    """Define an interval"""
+def define_interval(name: str, *, per_octave: int) -> BaseInterval:
+    """Define a new interval type"""
     return type(name, (BaseInterval,), {"n_per_octave": per_octave})
 
 
-Octaves = _interval("Octaves", per_octave=1)
-Tones = _interval("Tones", per_octave=6)
-Semitones = _interval("Semitones", per_octave=12)
+Octaves = define_interval("Octaves", per_octave=1)
+Tones = define_interval("Tones", per_octave=6)
+Semitones = define_interval("Semitones", per_octave=12)
