@@ -4,7 +4,7 @@ import pytest
 import nightcore
 
 
-class Input(nightcore.RelativeChange):
+class Input(nightcore.change.RelativeChange):
     def as_percent(self):
         return float(self.amount)
 
@@ -59,7 +59,7 @@ class TestRelativeChange:
         assert op(Input(1), rhs) == expected
 
     def test_float_use_as_percent(self):
-        class Test(nightcore.RelativeChange):
+        class Test(nightcore.change.RelativeChange):
             flag = False
 
             def as_percent(self):
@@ -75,7 +75,7 @@ class TestRelativeChange:
         assert int(Input(1.1)) == 1
 
 
-class Cents(nightcore.BaseInterval):
+class Cents(nightcore.change.BaseInterval):
     n_per_octave = 1200
 
 
