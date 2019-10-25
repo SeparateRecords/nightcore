@@ -146,7 +146,7 @@ The @ operator is shorthand for the `nightcore` function. The function only need
 - The operator is less readable in context
 - You need to use a function
 
-> **nightcore**(*<u title="An AudioSegment or PathLike object">audio_or_path</u>*, *<u title="An int, float, or RelativeChange subclass (see above)">amount</u>*, \*\**<u title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</u>*) -> *AudioSegment*
+> **nightcore**(*<ins title="An AudioSegment or PathLike object">audio_or_path</ins>*, *<ins title="An int, float, or RelativeChange subclass (see above)">amount</ins>*, \*\**<ins title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</ins>*) -> *AudioSegment*
 
 ```python
 import nightcore as nc
