@@ -140,13 +140,15 @@ nc_audio = "tests/test.mp3" @ nc.Tones(1)
 nc_audio.export("tests/test_nc.mp3")
 ```
 
-The @ operator is shorthand for the `nightcore` function. The function only needs to be used if:
+### Advanced Usage
+
+> **nightcore**(*<ins title="An AudioSegment or PathLike object">audio_or_path</ins>*, *<ins title="An int, float, or RelativeChange subclass (see above)">amount</ins>*, \*\**<ins title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</ins>*) -> *AudioSegment*
+
+The @ operator is shorthand for the `nightcore` function. The function only needs to be called manually if:
 
 - You need to provide additional keyword arguments to `AudioSegment.from_file`
 - The operator is less readable in context
 - You need to use a function
-
-> **nightcore**(*<ins title="An AudioSegment or PathLike object">audio_or_path</ins>*, *<ins title="An int, float, or RelativeChange subclass (see above)">amount</ins>*, \*\**<ins title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</ins>*) -> *AudioSegment*
 
 ```python
 import nightcore as nc
