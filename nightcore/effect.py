@@ -51,23 +51,16 @@ def nightcore(
     `amount` cannot be converted to `float`.
     """
 
-    # This function is an effect, but it can also be used by itself.
-    # Writing `nightcore.nc("example.mp3", 2)` is fine in many cases.
     if isinstance(audio, AudioSegment):
         audio_seg = audio
     else:
-        # If the user specified `file=...`, remove it.
+        # If the user provided "file=...", ignore it to avoid errors
         if "file" in kwargs:
             del kwargs["file"]
-        # Pass the remaining kwargs to from_file and use the returned audio
         audio_seg = AudioSegment.from_file(audio, **kwargs)
 
-    # Multiply the old framerate by the amount of change. Exceptions raised
-    # will propagate out
     new_framerate = round(audio_seg.frame_rate * float(amount))
 
-    # Spawn a new audio segment using all the same data and properties,
-    # override the framerate
     new_audio = audio_seg._spawn(
         audio_seg.raw_data, overrides={"frame_rate": new_framerate}
     )
