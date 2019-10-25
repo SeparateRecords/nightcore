@@ -3,7 +3,7 @@ from __future__ import annotations
 import operator
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Union
+from typing import TYPE_CHECKING, Union, cast
 
 from nightcore.effect import nightcore
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from pydub import AudioSegment
 
 
-@dataclass(frozen=True, eq=False)
+@dataclass(frozen=True, eq=False)  # type: ignore
 class RelativeChange(ABC):
     """Convert numerical values to an amount of change"""
 
@@ -173,7 +173,10 @@ class BaseInterval(RelativeChange):
 
 def define_interval(name: str, *, per_octave: int) -> BaseInterval:
     """Define a new interval type"""
-    return type(name, (BaseInterval,), {"n_per_octave": per_octave})
+    bases = (BaseInterval,)
+    obj_dict = {"n_per_octave": per_octave}
+    interval = type(name, bases, obj_dict)
+    return cast(BaseInterval, interval)
 
 
 Octaves = define_interval("Octaves", per_octave=1)
