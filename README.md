@@ -128,7 +128,7 @@ As the word `nightcore` is long, it's recommended to import the module as `nc`.
 
 ### Quickstart
 
-You can use any of `Octaves`, `Tones`, `Semitones`, or `Percent` to change speed.
+You can use any of `Octaves`, `Tones`, `Semitones`, or `Percent` to change speed. These are all subclasses of the base `RelativeChange` class.
 
 Using the @ operator with one of the above classes is the most convenient way to nightcore a path-like object or `AudioSegment`.
 
