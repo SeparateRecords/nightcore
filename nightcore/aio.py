@@ -17,6 +17,7 @@ async def nightcore(
     amount: Union[RelativeChange, float],
     **kwargs: Any,
 ) -> AudioSegment:
+    """Async function equivalent to `nightcore.nightcore`, for asyncio"""
     loop = asyncio.get_running_loop()
     func = functools.partial(nc, audio, amount, **kwargs)
     audio = await loop.run_in_executor(None, func)

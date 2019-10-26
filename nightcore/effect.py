@@ -49,6 +49,8 @@ def nightcore(
     ------
     ValueError:
     `amount` cannot be converted to `float`.
+
+    Any errors cause by AudioSegment.from_file will be propagated.
     """
 
     if isinstance(audio, AudioSegment):
