@@ -150,6 +150,8 @@ The @ operator is shorthand for the `nightcore` function. The function only need
 - The operator is less readable in context
 - You need to use a function
 
+There is also an equivalent async function in its own namespace (`nightcore.aio`).
+
 ```python
 import nightcore as nc
 
