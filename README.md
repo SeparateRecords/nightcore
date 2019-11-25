@@ -80,7 +80,7 @@ $ nightcore music.mp3 150 percent > out.mp3
 
 ### Format & Codec
 
-If file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`).
+If the file's format cannot be inferred from its extension, you can specify it manually with `--format` (`-f`).
 
 ```console
 $ nightcore --format ogg badly_named_file > out.mp3
@@ -142,7 +142,7 @@ nc_audio.export("tests/test_nc.mp3")
 
 ### Advanced Usage
 
-> **nightcore**(*<ins title="An AudioSegment or PathLike object">audio_or_path</ins>*, *<ins title="An int, float, or RelativeChange subclass (see above)">amount</ins>*, \*\**<ins title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</ins>*) -> *AudioSegment*
+> **nightcore**(_<ins title="An AudioSegment or PathLike object">audio_or_path</ins>_, _<ins title="An int, float, or RelativeChange subclass (see above)">amount</ins>_, \*\*_<ins title="Additional keyword arguments passed to AudioSegment.from_file if the first argument is not an AudioSegment">kwargs</ins>_) -> _AudioSegment_
 
 The @ operator is shorthand for the `nightcore` function. The function only needs to be called manually if:
 
@@ -150,14 +150,14 @@ The @ operator is shorthand for the `nightcore` function. The function only need
 - The operator is less readable in context
 - You need to use a function
 
-There is also an equivalent async function in its own namespace (`nightcore.aio`).
-
 ```python
 import nightcore as nc
 
 # Additional keyword args are passed to AudioSegment.from_file
 audio = nc.nightcore("/tmp/badly_named_audio", nc.Semitones(2), format="ogg")
 ```
+
+There is also an identical async function in its own namespace (`nightcore.aio.nightcore()`).
 
 ## Contributing
 
